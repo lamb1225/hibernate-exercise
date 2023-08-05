@@ -50,15 +50,15 @@ public class TestApp {
 //			System.out.println(member.getNickname());
 //		}
 		
-		// 測試 Criteria 寫法
+		// 測試用 Criteria 寫法
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		
-		// select USERNAME, NICKNAME
+		// 取得 Criteria API 相關物件
 		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
 		
-		// from MEMBER
+		// from MEMBER，取得Root物件
 		Root<Member> root = criteriaQuery.from(Member.class);
 		
 		// where USERNAME = ? and PASSWORD = ?
