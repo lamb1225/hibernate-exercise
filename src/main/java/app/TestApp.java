@@ -18,18 +18,21 @@ public class TestApp {
 		TestApp app = new TestApp();
 //		app.insert(member);
 //		System.out.println(member.getId());
-		
+
 		// 刪除測試
 //		System.out.println(app.deleteById(3));
-		
+
 		// 修改測試
-		Member member = new Member();
-		member.setId(1);
-		member.setPass(false);
-		member.setRoleId(2);
-		System.out.println(app.updateById(member));
+//		Member member = new Member();
+//		member.setId(1);
+//		member.setPass(false);
+//		member.setRoleId(2);
+//		System.out.println(app.updateById(member));
+		
+		// 單筆查詢測試
+		System.out.println(app.selectById(2).getNickname());
 	}
-	
+
 	// 新增
 	public Integer insert(Member member) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -43,11 +46,11 @@ public class TestApp {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			return null;
-		}	
+		}
 	}
-	
+
 	// 刪除
-	public Integer deleteById(Integer id) {
+	public int deleteById(Integer id) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		try {
@@ -60,22 +63,22 @@ public class TestApp {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			return -1;
-		}	
+		}
 	}
-	
+
 	// 修改
-	public Integer updateById(Member newMember) {
+	public int updateById(Member newMember) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		try {
 			Transaction transaction = session.beginTransaction();
 			Member oldMember = session.get(Member.class, newMember.getId());
 			final Boolean pass = newMember.getPass();
-			if(pass != null) {
+			if (pass != null) {
 				oldMember.setPass(pass);
 			}
 			final Integer roleId = newMember.getRoleId();
-			if(roleId != null) {
+			if (roleId != null) {
 				oldMember.setRoleId(roleId);
 			}
 			transaction.commit();
@@ -84,6 +87,22 @@ public class TestApp {
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			return -1;
-		}	
+		}
+	}
+
+	// 單筆查詢
+	public Member selectById(Integer id) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			Transaction transaction = session.beginTransaction();
+			Member member = session.get(Member.class, id);
+			transaction.commit();
+			return member;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			return null;
+		}
 	}
 }
