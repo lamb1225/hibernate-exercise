@@ -1,11 +1,5 @@
 package web.member.dao.impl;
 
-import static core.util.CommonUtil.getConnection;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -186,6 +180,7 @@ public class MemberDaoImpl implements MemberDao {
 		return session
 				.createQuery(criteriaQuery)
 				.uniqueResult();
+		
 		// 下面JDBC寫法 等於 上面用Criteria寫法
 //		try (
 //			Connection conn = getConnection();
@@ -216,32 +211,39 @@ public class MemberDaoImpl implements MemberDao {
 	
 	@Override
 	public Member selectForLogin(String username, String password) {
-		final String sql = "select * from MEMBER where USERNAME = ? and PASSWORD = ?";
-		try (
-			Connection conn = getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setString(1, username);
-			pstmt.setString(2, password);
-			try (
-				ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					Member member = new Member();
-					member.setId(rs.getInt("ID"));
-					member.setUsername(rs.getString("USERNAME"));
-					member.setPassword(rs.getString("PASSWORD"));
-					member.setNickname(rs.getString("NICKNAME"));
-					member.setPass(rs.getBoolean("PASS"));
-					member.setRoleId(rs.getInt("ROLE_ID"));
-					member.setCreator(rs.getString("CREATOR"));
-					member.setCreatedDate(rs.getTimestamp("CREATED_DATE"));
-					member.setUpdater(rs.getString("UPDATER"));
-					member.setLastUpdatedDate(rs.getTimestamp("LAST_UPDATED_DATE"));
-					return member;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		final String sql = "select * from MEMBER where USERNAME = :username and PASSWORD = :password";
+		return getSession()
+				.createNativeQuery(sql, Member.class)
+				.setParameter("username", username)
+				.setParameter("password", password)
+				.uniqueResult();
+			
+		// 下面JDBC寫法 等於 上面用Native SQL寫法
+//		try (
+//			Connection conn = getConnection();
+//			PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//			pstmt.setString(1, username);
+//			pstmt.setString(2, password);
+//			try (
+//				ResultSet rs = pstmt.executeQuery()) {
+//				if (rs.next()) {
+//					Member member = new Member();
+//					member.setId(rs.getInt("ID"));
+//					member.setUsername(rs.getString("USERNAME"));
+//					member.setPassword(rs.getString("PASSWORD"));
+//					member.setNickname(rs.getString("NICKNAME"));
+//					member.setPass(rs.getBoolean("PASS"));
+//					member.setRoleId(rs.getInt("ROLE_ID"));
+//					member.setCreator(rs.getString("CREATOR"));
+//					member.setCreatedDate(rs.getTimestamp("CREATED_DATE"));
+//					member.setUpdater(rs.getString("UPDATER"));
+//					member.setLastUpdatedDate(rs.getTimestamp("LAST_UPDATED_DATE"));
+//					return member;
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 }
