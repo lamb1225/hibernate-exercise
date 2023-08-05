@@ -1,8 +1,11 @@
 package app;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import core.util.HibernateUtil;
 import web.member.pojo.Member;
@@ -30,7 +33,15 @@ public class TestApp {
 //		System.out.println(app.updateById(member));
 		
 		// 單筆查詢測試
-		System.out.println(app.selectById(2).getNickname());
+//		System.out.println(app.selectById(2).getNickname());
+		
+		//多筆查詢測試
+		app.selectAll().forEach(member -> System.out.println(member.getNickname()));
+		// 上面一行等於下列寫法
+		for(Member member : app.selectAll()){
+			System.out.println(member.getNickname());
+		}
+	
 	}
 
 	// 新增
@@ -99,6 +110,23 @@ public class TestApp {
 			Member member = session.get(Member.class, id);
 			transaction.commit();
 			return member;
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			return null;
+		}
+	}
+	
+	// 多筆查詢
+	public List<Member> selectAll() {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			Transaction transaction = session.beginTransaction();
+			Query<Member> query = session.createQuery("SELECT new web.member.pojo.Member(username, nickname) FROM Member", Member.class);
+			List<Member> list = query.getResultList();
+			transaction.commit();
+			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
