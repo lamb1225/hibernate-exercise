@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -173,31 +177,41 @@ public class MemberDaoImpl implements MemberDao {
 	@Override
 	public Member selectByUsername(String username) {
 		final String sql = "select * from MEMBER where USERNAME = ?";
-		try (
-			Connection conn = getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setString(1, username);
-			try (
-				ResultSet rs = pstmt.executeQuery()) {
-				if (rs.next()) {
-					Member member = new Member();
-					member.setId(rs.getInt("ID"));
-					member.setUsername(rs.getString("USERNAME"));
-					member.setPassword(rs.getString("PASSWORD"));
-					member.setNickname(rs.getString("NICKNAME"));
-					member.setPass(rs.getBoolean("PASS"));
-					member.setRoleId(rs.getInt("ROLE_ID"));
-					member.setCreator(rs.getString("CREATOR"));
-					member.setCreatedDate(rs.getTimestamp("CREATED_DATE"));
-					member.setUpdater(rs.getString("UPDATER"));
-					member.setLastUpdatedDate(rs.getTimestamp("LAST_UPDATED_DATE"));
-					return member;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		
+		Session session = getSession();
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
+		Root<Member> root = criteriaQuery.from(Member.class);
+		criteriaQuery.where(criteriaBuilder.equal(root.get("username"), username));
+		return session
+				.createQuery(criteriaQuery)
+				.uniqueResult();
+		// 下面JDBC寫法 等於 上面用Criteria寫法
+//		try (
+//			Connection conn = getConnection();
+//			PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//			pstmt.setString(1, username);
+//			try (
+//				ResultSet rs = pstmt.executeQuery()) {
+//				if (rs.next()) {
+//					Member member = new Member();
+//					member.setId(rs.getInt("ID"));
+//					member.setUsername(rs.getString("USERNAME"));
+//					member.setPassword(rs.getString("PASSWORD"));
+//					member.setNickname(rs.getString("NICKNAME"));
+//					member.setPass(rs.getBoolean("PASS"));
+//					member.setRoleId(rs.getInt("ROLE_ID"));
+//					member.setCreator(rs.getString("CREATOR"));
+//					member.setCreatedDate(rs.getTimestamp("CREATED_DATE"));
+//					member.setUpdater(rs.getString("UPDATER"));
+//					member.setLastUpdatedDate(rs.getTimestamp("LAST_UPDATED_DATE"));
+//					return member;
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return null;
 	}
 	
 	@Override
