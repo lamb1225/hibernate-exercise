@@ -2,6 +2,10 @@ package app;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,14 +22,16 @@ public class TestApp {
 //		member.setNickname("暱稱");
 //		
 		// 新增測試
-		TestApp app = new TestApp();
+//		TestApp app = new TestApp();
 //		app.insert(member);
 //		System.out.println(member.getId());
 
 		// 刪除測試
+//		TestApp app = new TestApp();
 //		System.out.println(app.deleteById(3));
 
 		// 修改測試
+//		TestApp app = new TestApp();
 //		Member member = new Member();
 //		member.setId(1);
 //		member.setPass(false);
@@ -33,15 +39,45 @@ public class TestApp {
 //		System.out.println(app.updateById(member));
 		
 		// 單筆查詢測試
+//		TestApp app = new TestApp();
 //		System.out.println(app.selectById(2).getNickname());
 		
 		//多筆查詢測試
-		app.selectAll().forEach(member -> System.out.println(member.getNickname()));
-		// 上面一行等於下列寫法
-		for(Member member : app.selectAll()){
-			System.out.println(member.getNickname());
-		}
-	
+//		TestApp app = new TestApp();
+//		app.selectAll().forEach(member -> System.out.println(member.getNickname()));
+//		// 上面一行等於下列寫法
+//		for(Member member : app.selectAll()){
+//			System.out.println(member.getNickname());
+//		}
+		
+		// 測試 Criteria 寫法
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		
+		// select USERNAME, NICKNAME
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
+		
+		// from MEMBER
+		Root<Member> root = criteriaQuery.from(Member.class);
+		
+		// where USERNAME = ? and PASSWORD = ?
+		criteriaQuery.where(criteriaBuilder.and(
+				criteriaBuilder.equal(root.get("username"), "admin"),
+				criteriaBuilder.equal(root.get("password"), "P@ssw0rd")
+		));
+		
+		// select USERNAME, NICKNAME
+		criteriaQuery.multiselect(root.get("username"), root.get("nickname"));
+		
+		// order by ID
+		criteriaQuery.orderBy(criteriaBuilder.asc(root.get("id")));
+
+		Member member = session.createQuery(criteriaQuery).uniqueResult();
+		System.out.println(member.getNickname());
+		
+		
+		
 	}
 
 	// 新增
