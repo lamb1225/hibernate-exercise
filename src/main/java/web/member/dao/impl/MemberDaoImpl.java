@@ -80,7 +80,7 @@ public class MemberDaoImpl implements MemberDao {
 			.setParameter("pass", member.getPass())
 			.setParameter("roleId", member.getRoleId())
 			.setParameter("updater", member.getUpdater())
-			.setParameter("lastUpdatedDate", member.getUsername())
+			.setParameter("username", member.getUsername())
 			.executeUpdate();
 		
 			// 下面JDBC寫法 等於 上面用Hibernate寫法		
