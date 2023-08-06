@@ -18,5 +18,7 @@
         <property name="hibernate.format_sql">true</property>
         
         <mapping class="web.member.pojo.Member" />
+        <mapping class="web.emp.pojo.Emp" />
+        <mapping class="web.emp.pojo.Dept" />        
     </session-factory>
 </hibernate-configuration>
