@@ -12,6 +12,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import core.util.HibernateUtil;
+import web.emp.pojo.Dept;
 import web.member.pojo.Member;
 
 public class TestApp {
@@ -50,33 +51,44 @@ public class TestApp {
 //			System.out.println(member.getNickname());
 //		}
 		
+		
 		// 測試用 Criteria 寫法
+//		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+//		Session session = sessionFactory.openSession();
+//		
+//		// 取得 Criteria API 相關物件
+//		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+//		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
+//		
+//		// from MEMBER，取得Root物件
+//		Root<Member> root = criteriaQuery.from(Member.class);
+//		
+//		// where USERNAME = ? and PASSWORD = ?
+//		criteriaQuery.where(criteriaBuilder.and(
+//				criteriaBuilder.equal(root.get("username"), "admin"),
+//				criteriaBuilder.equal(root.get("password"), "P@ssw0rd")
+//		));
+//		
+//		// select USERNAME, NICKNAME
+//		criteriaQuery.multiselect(root.get("username"), root.get("nickname"));
+//		
+//		// order by ID
+//		criteriaQuery.orderBy(criteriaBuilder.asc(root.get("id")));
+//
+//		Member member = session.createQuery(criteriaQuery).uniqueResult();
+//		System.out.println(member.getNickname());
+		
+		
+		// 測試 Association
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		
-		// 取得 Criteria API 相關物件
-		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
-		
-		// from MEMBER，取得Root物件
-		Root<Member> root = criteriaQuery.from(Member.class);
-		
-		// where USERNAME = ? and PASSWORD = ?
-		criteriaQuery.where(criteriaBuilder.and(
-				criteriaBuilder.equal(root.get("username"), "admin"),
-				criteriaBuilder.equal(root.get("password"), "P@ssw0rd")
-		));
-		
-		// select USERNAME, NICKNAME
-		criteriaQuery.multiselect(root.get("username"), root.get("nickname"));
-		
-		// order by ID
-		criteriaQuery.orderBy(criteriaBuilder.asc(root.get("id")));
+		Dept dept = session.get(Dept.class, 30);
+		var emps = dept.getEmps();
+		for(var emp : emps) {
+			System.out.println(emp.getEname());
+		}
 
-		Member member = session.createQuery(criteriaQuery).uniqueResult();
-		System.out.println(member.getNickname());
-		
-		
 		
 	}
 

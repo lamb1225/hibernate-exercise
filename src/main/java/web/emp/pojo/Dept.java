@@ -1,7 +1,11 @@
 package web.emp.pojo;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 import lombok.Data;
 
@@ -12,5 +16,8 @@ public class Dept {
 	private Integer deptno;
 	private String dname;
 	private String loc;
+	@OneToMany
+	@JoinColumn(name = "DEPTNO", referencedColumnName = "DEPTNO")
+	private List<Emp> emps;
 
 }
