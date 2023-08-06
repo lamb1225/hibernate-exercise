@@ -16,8 +16,13 @@ public class Dept {
 	private Integer deptno;
 	private String dname;
 	private String loc;
+	// 單向1對N (Dempt -> Emp)
 //	@OneToMany
 //	@JoinColumn(name = "DEPTNO", referencedColumnName = "DEPTNO")
 //	private List<Emp> emps;
+
+	// 雙向1對N (Dempt -> Emp)
+	@OneToMany(mappedBy = "dept")
+	private List<Emp> emps;
 
 }

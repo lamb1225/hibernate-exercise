@@ -89,13 +89,25 @@ public class TestApp {
 //		}
 
 		// 測試 Association (單向N對1)
+//		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+//		Session session = sessionFactory.openSession();
+//
+//		Emp emp = session.get(Emp.class, 7369);
+//		Dept dept = emp.getDept();
+//		System.out.println(dept.getDeptno());
+//		System.out.println(dept.getDname());
+
+		// 測試 Association (雙向1對N(等同雙向N對1))
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 
 		Emp emp = session.get(Emp.class, 7369);
 		Dept dept = emp.getDept();
-		System.out.println(dept.getDeptno());
-		System.out.println(dept.getDname());
+		List<Emp> emps = dept.getEmps();
+		for (Emp tmp : emps) {
+			System.out.println(tmp.getEname());
+		}
+
 	}
 
 	// 新增

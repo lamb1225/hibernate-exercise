@@ -21,6 +21,12 @@ public class Emp {
 	private Double sal;
 	private Double comm;
 	private Integer deptno;
+	// 單向N對1 (Dempt <- Emp )
+//	@ManyToOne
+//	@JoinColumn(name = "DEPTNO", insertable = false, updatable = false)
+//	private Dept dept;
+
+	// 等同雙向N對1 (Dempt <- Emp)
 	@ManyToOne
 	@JoinColumn(name = "DEPTNO", insertable = false, updatable = false)
 	private Dept dept;
