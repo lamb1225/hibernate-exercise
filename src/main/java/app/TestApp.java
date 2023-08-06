@@ -13,6 +13,7 @@ import org.hibernate.query.Query;
 
 import core.util.HibernateUtil;
 import web.emp.pojo.Dept;
+import web.emp.pojo.Emp;
 import web.member.pojo.Member;
 
 public class TestApp {
@@ -38,20 +39,19 @@ public class TestApp {
 //		member.setPass(false);
 //		member.setRoleId(2);
 //		System.out.println(app.updateById(member));
-		
+
 		// 單筆查詢測試
 //		TestApp app = new TestApp();
 //		System.out.println(app.selectById(2).getNickname());
-		
-		//多筆查詢測試
+
+		// 多筆查詢測試
 //		TestApp app = new TestApp();
 //		app.selectAll().forEach(member -> System.out.println(member.getNickname()));
 //		// 上面一行等於下列寫法
 //		for(Member member : app.selectAll()){
 //			System.out.println(member.getNickname());
 //		}
-		
-		
+
 		// 測試用 Criteria 寫法
 //		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 //		Session session = sessionFactory.openSession();
@@ -77,19 +77,25 @@ public class TestApp {
 //
 //		Member member = session.createQuery(criteriaQuery).uniqueResult();
 //		System.out.println(member.getNickname());
-		
-		
-		// 測試 Association
+
+		// 測試 Association (單向1對N)
+//		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+//		Session session = sessionFactory.openSession();
+//		
+//		Dept dept = session.get(Dept.class, 30);
+//		var emps = dept.getEmps();
+//		for(var emp : emps) {
+//			System.out.println(emp.getEname());
+//		}
+
+		// 測試 Association (單向N對1)
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
-		
-		Dept dept = session.get(Dept.class, 30);
-		var emps = dept.getEmps();
-		for(var emp : emps) {
-			System.out.println(emp.getEname());
-		}
 
-		
+		Emp emp = session.get(Emp.class, 7369);
+		Dept dept = emp.getDept();
+		System.out.println(dept.getDeptno());
+		System.out.println(dept.getDname());
 	}
 
 	// 新增
@@ -164,14 +170,15 @@ public class TestApp {
 			return null;
 		}
 	}
-	
+
 	// 多筆查詢
 	public List<Member> selectAll() {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		try {
 			Transaction transaction = session.beginTransaction();
-			Query<Member> query = session.createQuery("SELECT new web.member.pojo.Member(username, nickname) FROM Member", Member.class);
+			Query<Member> query = session
+					.createQuery("SELECT new web.member.pojo.Member(username, nickname) FROM Member", Member.class);
 			List<Member> list = query.getResultList();
 			transaction.commit();
 			return list;

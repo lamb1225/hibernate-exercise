@@ -16,8 +16,8 @@ public class Dept {
 	private Integer deptno;
 	private String dname;
 	private String loc;
-	@OneToMany
-	@JoinColumn(name = "DEPTNO", referencedColumnName = "DEPTNO")
-	private List<Emp> emps;
+//	@OneToMany
+//	@JoinColumn(name = "DEPTNO", referencedColumnName = "DEPTNO")
+//	private List<Emp> emps;
 
 }
