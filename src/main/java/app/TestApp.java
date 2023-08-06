@@ -12,9 +12,9 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import core.util.HibernateUtil;
-import web.emp.pojo.Dept;
-import web.emp.pojo.Emp;
-import web.member.pojo.Member;
+import web.emp.entity.Dept;
+import web.emp.entity.Emp;
+import web.member.entity.Member;
 
 public class TestApp {
 	public static void main(String[] args) {
