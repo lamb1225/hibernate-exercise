@@ -18,7 +18,7 @@ public interface CoreDao<P, I> {
 	List<P> selectAll();
 	
 	default Session getSession() {
-//		return getSessionFactory().getCurrentSession();
-		return getSessionFactory().openSession();
+		return getSessionFactory().getCurrentSession(); // 用於web環境
+//		return getSessionFactory().openSession(); 		// 用於main()方法
 	}
 }
