@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd">
+		
 	<!-- 此處在許願&託管 -->
 	<!-- 下行意思是：MemberDao memberDao = new MemberDaoIml(); -->
-	<bean id="memberDao" class="web.member.dao.impl.MemberDaoImpl" />
+	<!-- <bean id="memberDao" class="web.member.dao.impl.MemberDaoImpl" /> -->
 
+
+	<!-- 練習用，太舊了! 未來不要用這種方式 -->
+	<!-- 給""練習JDBC寫法"用的 -->
+	<!--  	<context:property-placeholder location="classpath:jdbc.properties" /> -->
+	
+	<!--  	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+	<!-- 		<property name="driverClassName" value="${driverClassName}" /> -->
+	<!-- 		<property name="url" value="${url}" /> -->
+	<!-- 		<property name="username" value="${user}" /> -->
+	<!-- 		<property name="password" value="${password}" /> -->
+	<!--  	</bean> -->
+
+		<context:component-scan base-package="web.member.dao.impl" />
+		
 </beans>
