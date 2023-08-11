@@ -47,7 +47,7 @@ public class TestAppSpring {
 //			e.printStackTrace();
 //		}
 		
-		// 測試用Annotation組態
+		// 測試用IoC容器物件-GenericApplicationContext
 		GenericApplicationContext applicationContext = new GenericApplicationContext();
         new XmlBeanDefinitionReader(applicationContext).loadBeanDefinitions("applicationContext.xml");
         applicationContext.refresh();
