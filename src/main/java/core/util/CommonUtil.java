@@ -6,20 +6,18 @@ import static core.util.Constants.JSON_MIME_TYPE;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.SQLException;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class CommonUtil {
+	private static final Logger logger = LogManager.getLogger(CommonUtil.class);
 	
 //	public static Connection getConnection() throws NamingException, SQLException {
 //		if (DATASOURCE == null) {
@@ -37,7 +35,8 @@ public class CommonUtil {
 		try (BufferedReader br = request.getReader()) {
 			return GSON.fromJson(br, classOfPojo);
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}

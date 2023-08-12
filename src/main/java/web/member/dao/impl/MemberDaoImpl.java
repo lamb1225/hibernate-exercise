@@ -17,10 +17,13 @@ import web.member.entity.Member;
 
 @Repository
 public class MemberDaoImpl implements MemberDao {
-
+	@PersistenceContext
+	private Session session;
+	
 	@Override
 	public int insert(Member member) {
-		getSession().persist(member);
+		session.persist(member);
+//		getSession().persist(member);
 		return 1;
 		// 上面兩行等於下面多行
 //		final String sql = "insert into MEMBER(USERNAME, PASSWORD, NICKNAME, ROLE_ID) " + "values(?, ?, ?, ?)";
@@ -40,7 +43,7 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public int deleteById(Integer id) {
-		Session session = getSession();
+//		Session session = getSession();
 		Member member = session.get(Member.class, id);
 		session.remove(member);
 		return 1;
@@ -73,7 +76,9 @@ public class MemberDaoImpl implements MemberDao {
 			.append("lastUpdatedDate = NOW() ")
 			.append("WHERE username = :username");
 		
-		Query<?> query = getSession().createQuery(hql.toString());
+		Query<?> query = session.createQuery(hql.toString());
+		
+//		Query<?> query = getSession().createQuery(hql.toString());
 		if(password != null && !password.isEmpty()) {
 			query.setParameter("password", password);
 //			offset = 1;
@@ -109,7 +114,10 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public Member selectById(Integer id) {
-		return getSession().get(Member.class, id);
+		return session.get(Member.class, id);
+		
+//		return getSession().get(Member.class, id);
+		
 //		final String sql = "select * from MEMBER where ID = ?";
 //		try (
 //			Connection conn = getConnection();
@@ -141,7 +149,8 @@ public class MemberDaoImpl implements MemberDao {
 	@Override
 	public List<Member> selectAll() {
 		final String hql = "FROM Member ORDER BY id";
-		return getSession()
+		return session
+//		return getSession()
 		.createQuery(hql, Member.class)
 		.getResultList();
 		
@@ -176,7 +185,7 @@ public class MemberDaoImpl implements MemberDao {
 	public Member selectByUsername(String username) {
 		final String sql = "select * from MEMBER where USERNAME = ?";
 		
-		Session session = getSession();
+//		Session session = getSession();
 		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
 		Root<Member> root = criteriaQuery.from(Member.class);
@@ -213,8 +222,7 @@ public class MemberDaoImpl implements MemberDao {
 //		return null;
 	}
 	
-	@PersistenceContext
-	private Session session;
+
 	
 	@Override
 	public Member selectForLogin(String username, String password) {
